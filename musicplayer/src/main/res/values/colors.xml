@@ -3,9 +3,12 @@
 
 
     <color name="white">#ffffff</color>
+    <color name="white_degree_60">#99FFFFFF</color>
 
 
     <color name="c_eeeeee">#EEEEEE</color>
+    <color name="c_ff733e">#FF733E</color>
+
 
 
 </resources>

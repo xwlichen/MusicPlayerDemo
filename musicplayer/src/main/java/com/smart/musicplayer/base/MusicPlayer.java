@@ -86,67 +86,7 @@ public class MusicPlayer extends  MusicControlView
     @Override
     @SuppressWarnings("ResourceType")
     protected void showProgressDialog(float deltaX, String seekTime, int seekTimePosition, String totalTime, int totalTimeDuration) {
-        if (mProgressDialog == null) {
-            View localView = LayoutInflater.from(getActivityContext()).inflate(getProgressDialogLayoutId(), null);
-            if (localView.findViewById(getProgressDialogProgressId()) instanceof ProgressBar) {
-                mDialogProgressBar = ((ProgressBar) localView.findViewById(getProgressDialogProgressId()));
-                if (mDialogProgressBarDrawable != null) {
-                    mDialogProgressBar.setProgressDrawable(mDialogProgressBarDrawable);
-                }
-            }
-            if (localView.findViewById(getProgressDialogCurrentDurationTextId()) instanceof TextView) {
-                mDialogSeekTime = ((TextView) localView.findViewById(getProgressDialogCurrentDurationTextId()));
-            }
-            if (localView.findViewById(getProgressDialogAllDurationTextId()) instanceof TextView) {
-                mDialogTotalTime = ((TextView) localView.findViewById(getProgressDialogAllDurationTextId()));
-            }
-            if (localView.findViewById(getProgressDialogImageId()) instanceof ImageView) {
-                mDialogIcon = ((ImageView) localView.findViewById(getProgressDialogImageId()));
-            }
-            mProgressDialog = new Dialog(getActivityContext(), com.shuyu.gsyvideoplayer.R.style.video_style_dialog_progress);
-            mProgressDialog.setContentView(localView);
-            mProgressDialog.getWindow().addFlags(Window.FEATURE_ACTION_BAR);
-            mProgressDialog.getWindow().addFlags(32);
-            mProgressDialog.getWindow().addFlags(16);
-            mProgressDialog.getWindow().setLayout(getWidth(), getHeight());
-            if (mDialogProgressNormalColor != -11 && mDialogTotalTime != null) {
-                mDialogTotalTime.setTextColor(mDialogProgressNormalColor);
-            }
-            if (mDialogProgressHighLightColor != -11 && mDialogSeekTime != null) {
-                mDialogSeekTime.setTextColor(mDialogProgressHighLightColor);
-            }
-            WindowManager.LayoutParams localLayoutParams = mProgressDialog.getWindow().getAttributes();
-            localLayoutParams.gravity = Gravity.TOP;
-            localLayoutParams.width = getWidth();
-            localLayoutParams.height = getHeight();
-            int location[] = new int[2];
-            getLocationOnScreen(location);
-            localLayoutParams.x = location[0];
-            localLayoutParams.y = location[1];
-            mProgressDialog.getWindow().setAttributes(localLayoutParams);
-        }
-        if (!mProgressDialog.isShowing()) {
-            mProgressDialog.show();
-        }
-        if (mDialogSeekTime != null) {
-            mDialogSeekTime.setText(seekTime);
-        }
-        if (mDialogTotalTime != null) {
-            mDialogTotalTime.setText(" / " + totalTime);
-        }
-        if (totalTimeDuration > 0)
-            if (mDialogProgressBar != null) {
-                mDialogProgressBar.setProgress(seekTimePosition * 100 / totalTimeDuration);
-            }
-        if (deltaX > 0) {
-            if (mDialogIcon != null) {
-                mDialogIcon.setBackgroundResource(com.shuyu.gsyvideoplayer.R.drawable.video_forward_icon);
-            }
-        } else {
-            if (mDialogIcon != null) {
-                mDialogIcon.setBackgroundResource(com.shuyu.gsyvideoplayer.R.drawable.video_backward_icon);
-            }
-        }
+
 
     }
 
