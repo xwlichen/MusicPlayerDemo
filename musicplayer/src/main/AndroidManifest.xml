@@ -1,2 +1,1 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.smart.musicplayer" />
+<manifest package="com.smart.musicplayer" />

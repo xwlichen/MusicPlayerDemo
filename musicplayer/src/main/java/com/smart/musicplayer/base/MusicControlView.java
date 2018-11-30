@@ -1,8 +1,6 @@
 package com.smart.musicplayer.base;
 
-import android.app.Activity;
 import android.content.Context;
-import android.media.AudioManager;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.AttrRes;
@@ -13,21 +11,12 @@ import android.util.AttributeSet;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.ViewParent;
-import android.view.WindowManager;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-
-import com.smart.musicplayer.listener.MusicProgressListener;
-import com.shuyu.gsyvideoplayer.listener.LockClickListener;
-import com.shuyu.gsyvideoplayer.utils.Debuger;
-
 import com.shuyu.gsyvideoplayer.utils.CommonUtil;
+import com.shuyu.gsyvideoplayer.utils.Debuger;
 import com.smart.musicplayer.R;
 import com.smart.musicplayer.listener.MusicProgressListener;
 

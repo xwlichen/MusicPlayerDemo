@@ -8,18 +8,16 @@ import android.os.Looper;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
-import android.view.Surface;
 
 import com.shuyu.gsyvideoplayer.cache.CacheFactory;
 import com.shuyu.gsyvideoplayer.cache.ICacheManager;
-import com.smart.musicplayer.listener.MediaPlayerListener;
 import com.shuyu.gsyvideoplayer.model.GSYModel;
 import com.shuyu.gsyvideoplayer.model.VideoOptionModel;
 import com.shuyu.gsyvideoplayer.player.IPlayerManager;
 import com.shuyu.gsyvideoplayer.player.PlayerFactory;
 import com.shuyu.gsyvideoplayer.utils.Debuger;
-import com.shuyu.gsyvideoplayer.video.base.GSYVideoViewBridge;
 import com.smart.musicplayer.base.MusicViewBridge;
+import com.smart.musicplayer.listener.MediaPlayerListener;
 
 import java.io.File;
 import java.lang.ref.WeakReference;

@@ -2,8 +2,8 @@ package com.smart.musicplayer.base;
 
 import android.content.Context;
 
-import com.smart.musicplayer.listener.MediaPlayerListener;
 import com.shuyu.gsyvideoplayer.player.IPlayerManager;
+import com.smart.musicplayer.listener.MediaPlayerListener;
 
 import java.io.File;
 import java.util.Map;
