@@ -29,7 +29,7 @@ import moe.codeest.enviews.ENDownloadView;
  * @email : 1960003945@qq.com
  * @description :
  */
-public class MusicPlayer extends  MusicControlView
+public class MusicPlayer extends  MusicBasePlayer
 {
 
 
@@ -157,15 +157,7 @@ public class MusicPlayer extends  MusicControlView
         prepareMusic();
     }
 
-    @Override
-    public MusicViewBridge getMusicManager() {
-        return null;
-    }
 
-    @Override
-    protected void releaseMusic() {
-
-    }
 
 
     /**
