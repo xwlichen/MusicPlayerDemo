@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">musicplayer</string>
+
+    <string name="player_time_curr">00:00</string>
 </resources>

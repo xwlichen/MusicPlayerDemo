@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="@dimen/dp_582"
+    android:layout_height="@dimen/dp_164"
+    android:background="@mipmap/media_audio_bg"
+    android:orientation="vertical">
+
+    <include layout="@layout/layout_music_attr_progress" />
+
+    <include layout="@layout/layout_music_attr_operate" />
+</RelativeLayout>
