@@ -260,25 +260,25 @@ public class MusicPlayer extends MusicBasePlayer {
      * 定义开始按键显示
      */
     protected void updateStartImage() {
-//        if (playtButton instanceof ENPlayView) {
-//            ENPlayView enPlayView = (ENPlayView) playtButton;
-//            enPlayView.setDuration(500);
-//            if (mCurrentState == CURRENT_STATE_PLAYING) {
-//                enPlayView.play();
-//            } else if (mCurrentState == CURRENT_STATE_ERROR) {
-//                enPlayView.pause();
-//            } else {
-//                enPlayView.pause();
-//            }
-//        } else if (playtButton instanceof ImageView) {
-//            ImageView imageView = (ImageView) playtButton;
-//            if (mCurrentState == CURRENT_STATE_PLAYING) {
-//                imageView.setImageResource(com.shuyu.gsyvideoplayer.R.drawable.video_click_pause_selector);
-//            } else if (mCurrentState == CURRENT_STATE_ERROR) {
-//                imageView.setImageResource(com.shuyu.gsyvideoplayer.R.drawable.video_click_error_selector);
-//            } else {
-//                imageView.setImageResource(com.shuyu.gsyvideoplayer.R.drawable.video_click_play_selector);
-//            }
-//        }
+        if (playtButton instanceof ENPlayView) {
+            ENPlayView enPlayView = (ENPlayView) playtButton;
+            enPlayView.setDuration(500);
+            if (mCurrentState == CURRENT_STATE_PLAYING) {
+                enPlayView.play();
+            } else if (mCurrentState == CURRENT_STATE_ERROR) {
+                enPlayView.pause();
+            } else {
+                enPlayView.pause();
+            }
+        } else if (playtButton instanceof ImageView) {
+            ImageView imageView = (ImageView) playtButton;
+            if (mCurrentState == CURRENT_STATE_PLAYING) {
+                imageView.setImageResource(com.shuyu.gsyvideoplayer.R.drawable.video_click_pause_selector);
+            } else if (mCurrentState == CURRENT_STATE_ERROR) {
+                imageView.setImageResource(com.shuyu.gsyvideoplayer.R.drawable.video_click_error_selector);
+            } else {
+                imageView.setImageResource(com.shuyu.gsyvideoplayer.R.drawable.video_click_play_selector);
+            }
+        }
     }
 }
