@@ -7,10 +7,15 @@ import android.content.DialogInterface;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import com.shuyu.gsyvideoplayer.utils.NetworkUtils;
 import com.smart.musicplayer.R;
+
+import moe.codeest.enviews.ENDownloadView;
+import moe.codeest.enviews.ENPlayView;
 
 /**
  * @date : 2018/11/30 下午1:32
@@ -18,8 +23,7 @@ import com.smart.musicplayer.R;
  * @email : 1960003945@qq.com
  * @description :
  */
-public class MusicPlayer extends  MusicBasePlayer
-{
+public class MusicPlayer extends MusicBasePlayer {
 
 
     //触摸进度dialog
@@ -66,9 +70,6 @@ public class MusicPlayer extends  MusicBasePlayer
     }
 
 
-
-
-
     /**
      * 触摸显示滑动进度dialog，如需要自定义继承重写即可，记得重写dismissProgressDialog
      */
@@ -92,47 +93,110 @@ public class MusicPlayer extends  MusicBasePlayer
 
     @Override
     protected void onClickUiToggle() {
+        if (mCurrentState == CURRENT_STATE_PREPAREING) {
 
+            changeUiToPreparingShow();
+        } else if (mCurrentState == CURRENT_STATE_PLAYING) {
+
+            changeUiToPlayingShow();
+        } else if (mCurrentState == CURRENT_STATE_PAUSE) {
+
+            changeUiToPauseShow();
+        } else if (mCurrentState == CURRENT_STATE_AUTO_COMPLETE) {
+
+            changeUiToCompleteShow();
+        } else if (mCurrentState == CURRENT_STATE_PLAYING_BUFFERING_START) {
+
+            changeUiToPlayingBufferingShow();
+        }
     }
 
     @Override
     protected void changeUiToNormal() {
+        setViewShowState(playtButton, VISIBLE);
+        setViewShowState(mLoadingProgressBar, INVISIBLE);
+        updateStartImage();
+        if (mLoadingProgressBar instanceof ENDownloadView) {
+            ((ENDownloadView) mLoadingProgressBar).reset();
+        }
 
     }
 
     @Override
     protected void changeUiToPreparingShow() {
+        setViewShowState(mLoadingProgressBar, VISIBLE);
+        setViewShowState(playtButton, INVISIBLE);
 
+        if (mLoadingProgressBar instanceof ENDownloadView) {
+            ENDownloadView enDownloadView = (ENDownloadView) mLoadingProgressBar;
+            if (enDownloadView.getCurrentState() == ENDownloadView.STATE_PRE) {
+                ((ENDownloadView) mLoadingProgressBar).start();
+            }
+        }
     }
 
     @Override
     protected void changeUiToPlayingShow() {
+        setViewShowState(playtButton, VISIBLE);
+        setViewShowState(mLoadingProgressBar, INVISIBLE);
+        setViewShowState(playtButton, INVISIBLE);
+
+        if (mLoadingProgressBar instanceof ENDownloadView) {
+            ((ENDownloadView) mLoadingProgressBar).reset();
+        }
+
+        updateStartImage();
 
     }
 
     @Override
     protected void changeUiToPauseShow() {
+        setViewShowState(playtButton, VISIBLE);
+        setViewShowState(mLoadingProgressBar, INVISIBLE);
+        if (mLoadingProgressBar instanceof ENDownloadView) {
+            ((ENDownloadView) mLoadingProgressBar).reset();
+
+        }
+        updateStartImage();
 
     }
 
     @Override
     protected void changeUiToError() {
+        setViewShowState(playtButton, VISIBLE);
+
+        setViewShowState(mLoadingProgressBar, INVISIBLE);
+
+        if (mLoadingProgressBar instanceof ENDownloadView) {
+            ((ENDownloadView) mLoadingProgressBar).reset();
+        }
+        updateStartImage();
 
     }
 
     @Override
     protected void changeUiToCompleteShow() {
+        setViewShowState(playtButton, VISIBLE);
+
+        setViewShowState(mLoadingProgressBar, INVISIBLE);
+        if (mLoadingProgressBar instanceof ENDownloadView) {
+            ((ENDownloadView) mLoadingProgressBar).reset();
+        }
+        updateStartImage();
 
     }
 
     @Override
     protected void changeUiToPlayingBufferingShow() {
-
+        setViewShowState(playtButton, INVISIBLE);
+        setViewShowState(mLoadingProgressBar, VISIBLE);
+        if (mLoadingProgressBar instanceof ENDownloadView) {
+            ENDownloadView enDownloadView = (ENDownloadView) mLoadingProgressBar;
+            if (enDownloadView.getCurrentState() == ENDownloadView.STATE_PRE) {
+                ((ENDownloadView) mLoadingProgressBar).start();
+            }
+        }
     }
-
-
-
-
 
 
     @Override
@@ -145,8 +209,6 @@ public class MusicPlayer extends  MusicBasePlayer
 
         prepareMusic();
     }
-
-
 
 
     /**
@@ -192,5 +254,31 @@ public class MusicPlayer extends  MusicBasePlayer
      */
     protected int getProgressDialogImageId() {
         return com.shuyu.gsyvideoplayer.R.id.duration_image_tip;
+    }
+
+    /**
+     * 定义开始按键显示
+     */
+    protected void updateStartImage() {
+        if (playtButton instanceof ENPlayView) {
+            ENPlayView enPlayView = (ENPlayView) playtButton;
+            enPlayView.setDuration(500);
+            if (mCurrentState == CURRENT_STATE_PLAYING) {
+                enPlayView.play();
+            } else if (mCurrentState == CURRENT_STATE_ERROR) {
+                enPlayView.pause();
+            } else {
+                enPlayView.pause();
+            }
+        } else if (playtButton instanceof ImageView) {
+            ImageView imageView = (ImageView) playtButton;
+            if (mCurrentState == CURRENT_STATE_PLAYING) {
+                imageView.setImageResource(com.shuyu.gsyvideoplayer.R.drawable.video_click_pause_selector);
+            } else if (mCurrentState == CURRENT_STATE_ERROR) {
+                imageView.setImageResource(com.shuyu.gsyvideoplayer.R.drawable.video_click_error_selector);
+            } else {
+                imageView.setImageResource(com.shuyu.gsyvideoplayer.R.drawable.video_click_play_selector);
+            }
+        }
     }
 }

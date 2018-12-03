@@ -80,6 +80,9 @@ public abstract class MusicControlView extends MusicView implements View.OnClick
     //列表按键
     protected View listButton;
 
+    //loading view
+    protected View mLoadingProgressBar;
+
 
     //进度定时器
     protected Timer updateProcessTimer;
@@ -113,6 +116,9 @@ public abstract class MusicControlView extends MusicView implements View.OnClick
         tvCurrentTime = findViewById(R.id.tvCurrentTime);
         tvTotalTime = findViewById(R.id.tvTotalTime);
         sbProgress = findViewById(R.id.sbProgress);
+
+        mLoadingProgressBar = findViewById(R.id.loading);
+
 
 
         if (isInEditMode())
