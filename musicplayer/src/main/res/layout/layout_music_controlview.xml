@@ -4,6 +4,13 @@
     android:layout_height="@dimen/dp_164"
     android:background="@mipmap/media_audio_bg"
     android:orientation="vertical">
+    <moe.codeest.enviews.ENDownloadView
+        android:id="@+id/loading"
+        android:layout_width="28dp"
+        android:layout_height="28dp"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:visibility="invisible" />
 
     <include layout="@layout/layout_music_attr_progress" />
 
