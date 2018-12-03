@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.util.AttributeSet;
+import android.widget.FrameLayout;
 import android.widget.SeekBar;
 
 /**
@@ -12,7 +13,7 @@ import android.widget.SeekBar;
  * @email : 1960003945@qq.com
  * @description :
  */
-public class MusicProgressBar extends SeekBar {
+public class MusicProgressBar extends FrameLayout {
     public MusicProgressBar(Context context) {
         super(context);
     }
