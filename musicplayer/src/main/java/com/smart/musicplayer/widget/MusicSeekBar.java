@@ -15,10 +15,10 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
+import com.shuyu.gsyvideoplayer.utils.CommonUtil;
+import com.smart.musicplayer.R;
 import com.smart.musicplayer.entity.SeekParams;
 import com.smart.musicplayer.listener.OnSeekChangeListener;
-import com.xw.repo.SizeUtils;
-import com.xw.repo.bubbleseekbar.R;
 
 import java.math.BigDecimal;
 
@@ -186,7 +186,7 @@ public class MusicSeekBar extends View {
         height = measure(heightMeasureSpec);
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 
-        paddingLeft = getPaddingLeft()+10;
+        paddingLeft = getPaddingLeft() + 10;
         paddingTop = getPaddingTop();
         paddingRigtht = getPaddingRight();
         paddingBottom = getPaddingBottom();
@@ -303,7 +303,7 @@ public class MusicSeekBar extends View {
 
     private boolean isTouchSeekBar(float mX, float mY) {
         if (mFaultTolerance == -1) {
-            mFaultTolerance = SizeUtils.dp2px(mContext, 5);
+            mFaultTolerance = CommonUtil.dip2px(mContext, 5);
         }
         boolean inWidthRange = mX >= (paddingLeft - 2 * mFaultTolerance) && mX <= (width - paddingRigtht + 2 * mFaultTolerance);
         boolean inHeightRange = mY >= (trackTop - thumbHeight / 2 - mFaultTolerance) && mY <= (trackTop + thumbHeight / 2 + mFaultTolerance);

@@ -13,16 +13,10 @@
         android:layout_height="wrap_content" />
 
 
-    <com.smart.musicplayer.widget.MyProgress
+    <com.smart.musicplayer.widget.MusicSeekBar
         android:id="@+id/myprogress"
         android:layout_width="match_parent"
-        android:layout_height="80dp"
-        myMagicProgress:circleProgressRadus="60dp"
-        myMagicProgress:horizonalProgressHeight="10dp"
-        myMagicProgress:textProgressSize="14sp"
-        myMagicProgress:colorProgress="#fd9112"
-        myMagicProgress:colorSecondProgress="#1592ff"
-        />
+        android:layout_height="80dp"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
