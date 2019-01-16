@@ -217,9 +217,9 @@ public class MusicSeekBar extends ViewGroup {
 //        measureChildren(widthMeasureSpec, heightMeasureSpec);
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 
-        paddingLeft = getPaddingLeft()+10;
+        paddingLeft = getPaddingLeft()+thumbWidth/2;
         paddingTop = getPaddingTop();
-        paddingRigtht = getPaddingRight()+10;
+        paddingRigtht = getPaddingRight()+thumbWidth/2;
         paddingBottom = getPaddingBottom();
 
         trackLeft = paddingLeft;
@@ -280,7 +280,7 @@ public class MusicSeekBar extends ViewGroup {
 
         // draw thumb
         Rect src = new Rect(0, 0, thumbBitmap.getWidth(), thumbBitmap.getHeight());
-        Rect dst = new Rect((int) thumbLeft-10, (int) thumbTop, (int) (thumbLeft + thumbBitmap.getWidth()-5), (int) (thumbTop + thumbBitmap.getHeight()));
+        Rect dst = new Rect((int) (thumbLeft), (int) (thumbTop), (int) (thumbLeft +10), (int) (thumbTop + thumbBitmap.getHeight()));
         canvas.drawBitmap(thumbBitmap, src, dst, null);
 
 
@@ -343,7 +343,7 @@ public class MusicSeekBar extends ViewGroup {
     private void refreshThumbCenterXByProgress(float progress) {
         //ThumbCenterX
 
-        thumbLeft = (int) ((progress / max) * (trackWidth * 1.0f));
+        thumbLeft = (int) ((progress / max) * ((trackWidth+thumbWidth) * 1.0f));
 
     }
 
@@ -393,9 +393,9 @@ public class MusicSeekBar extends ViewGroup {
     private float adjustTouchX(MotionEvent event) {
         float mTouchXCache;
         if (event.getX() < paddingLeft) {
-            mTouchXCache = paddingLeft;
-        } else if (event.getX() > trackWidth - paddingRigtht-paddingLeft) {
-            mTouchXCache = trackWidth - paddingRigtht-paddingLeft;
+            mTouchXCache = 0;
+        } else if (event.getX() > trackWidth ) {
+            mTouchXCache = trackWidth;
         } else {
             mTouchXCache = event.getX();
         }
@@ -404,7 +404,7 @@ public class MusicSeekBar extends ViewGroup {
 
     private float calculateProgress(float touchX) {
         lastProgress = currentProgress;
-        currentProgress = (min + (getAmplitude())) * (touchX) / (trackWidth- paddingRigtht-paddingLeft * 1.0f);
+        currentProgress = (min + (getAmplitude())) * (touchX) / (trackWidth * 1.0f);
         return currentProgress;
     }
 
