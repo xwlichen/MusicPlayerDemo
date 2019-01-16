@@ -1,5 +1,7 @@
 package com.smart.musicplayer.widget;
 
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -14,6 +16,10 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.animation.BounceInterpolator;
+import android.view.animation.LinearInterpolator;
+import android.widget.ImageView;
 
 import com.shuyu.gsyvideoplayer.utils.CommonUtil;
 import com.smart.musicplayer.R;
@@ -29,7 +35,7 @@ import java.math.BigDecimal;
  * @email : 1960003945@qq.com
  * @description :
  */
-public class MusicSeekBar extends View {
+public class MusicSeekBar extends ViewGroup {
 
 
     int colorFTrack = Color.GRAY;
@@ -53,6 +59,10 @@ public class MusicSeekBar extends View {
     float thumbTop;
     Bitmap thumbBitmap;
 
+    int loadingSize;
+    float loadingTop;
+    float loadingLeft;
+
 
     int trackHeight;
     int trackWidth;
@@ -62,7 +72,7 @@ public class MusicSeekBar extends View {
 
     float currentProgress = 200;
     float lastProgress;
-    float max = 700;
+    float max = 800;
     float min = 0;
 
 
@@ -81,6 +91,8 @@ public class MusicSeekBar extends View {
     boolean isTouching;
     OnSeekChangeListener mSeekChangeListener;
     int mScale = 1;
+
+    ImageView ivLoading;
 
 
     public MusicSeekBar(Context context) {
@@ -103,12 +115,27 @@ public class MusicSeekBar extends View {
         init();
     }
 
+    @Override
+    protected void onLayout(boolean b, int i, int i1, int i2, int i3) {
+        int count = getChildCount();
+        if (count == 0) {
+            addView(ivLoading);
+        }
+        int aftercount = getChildCount();
+
+        Log.e("xw", "count:" + aftercount);
+
+        ivLoading.layout((int) (thumbLeft+loadingLeft), (int) loadingTop, (int) (thumbLeft+loadingLeft + loadingSize), (int) loadingTop + loadingSize);
+
+
+    }
+
     public void init() {
+        setWillNotDraw(false);
         thumbBitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.classics_seek_bar_point);
-
-
-//        mThumbCenterX;
-
+        Bitmap loadingBitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.loading);
+        ivLoading = new ImageView(mContext);
+        ivLoading.setImageBitmap(loadingBitmap);
 
         trackHeight = 20;
         trackWidth = 700;
@@ -119,9 +146,12 @@ public class MusicSeekBar extends View {
 
         thumbWidth = thumbBitmap.getWidth();
         thumbHeight = thumbBitmap.getHeight();
-
+        loadingSize = loadingBitmap.getWidth();
 
         initPaint();
+
+//        addView(ivLoading);
+
 
     }
 
@@ -184,11 +214,12 @@ public class MusicSeekBar extends View {
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         width = measure(widthMeasureSpec);
         height = measure(heightMeasureSpec);
+//        measureChildren(widthMeasureSpec, heightMeasureSpec);
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 
-        paddingLeft = getPaddingLeft() + 10;
+        paddingLeft = getPaddingLeft()+10;
         paddingTop = getPaddingTop();
-        paddingRigtht = getPaddingRight();
+        paddingRigtht = getPaddingRight()+10;
         paddingBottom = getPaddingBottom();
 
         trackLeft = paddingLeft;
@@ -197,6 +228,10 @@ public class MusicSeekBar extends View {
         trackBottom = trackTop;
 
         thumbTop = (height - thumbHeight) / 2;
+
+        loadingTop = (height - loadingSize) / 2;
+
+        loadingLeft = (thumbWidth - loadingSize) / 2;
 
 
     }
@@ -220,6 +255,7 @@ public class MusicSeekBar extends View {
 
     }
 
+
     float trackLeft, trackTop, trackRight, trackBottom;
 
     public void drawFirstTrack(Canvas canvas) {
@@ -227,15 +263,24 @@ public class MusicSeekBar extends View {
     }
 
     public void drawSecondTrack(Canvas canvas) {
-        canvas.drawLine(trackLeft, trackTop, 500, trackBottom, paintFTrack);
+        canvas.drawLine(trackLeft, trackTop, 500, trackBottom, paintSTrack);
     }
 
     public void drawThirdTrack(Canvas canvas) {
-        canvas.drawLine(trackLeft, trackTop, currentProgress, trackBottom, paintTTrack);
+        if (thumbLeft-5<=trackLeft){
+            canvas.drawLine(trackLeft, trackTop, trackLeft, trackBottom, paintTTrack);
+
+        }else{
+
+            canvas.drawLine(trackLeft, trackTop, thumbLeft-5, trackBottom, paintTTrack);
+        }
+        Log.e("xw", "thumbLeft:"+thumbLeft);
+        Log.e("xw", "trackLeft:"+trackLeft);
+
 
         // draw thumb
         Rect src = new Rect(0, 0, thumbBitmap.getWidth(), thumbBitmap.getHeight());
-        Rect dst = new Rect((int) thumbLeft, (int) thumbTop, (int) (thumbLeft + thumbBitmap.getWidth()), (int) (thumbTop + thumbBitmap.getHeight()));
+        Rect dst = new Rect((int) thumbLeft-10, (int) thumbTop, (int) (thumbLeft + thumbBitmap.getWidth()-5), (int) (thumbTop + thumbBitmap.getHeight()));
         canvas.drawBitmap(thumbBitmap, src, dst, null);
 
 
@@ -275,7 +320,9 @@ public class MusicSeekBar extends View {
                     mSeekChangeListener.onStopTrackingTouch(this);
                 }
 //                if (!autoAdjustThumb()) {
+                refreshLoading();
                 invalidate();
+
 //                }
 
                 break;
@@ -327,17 +374,28 @@ public class MusicSeekBar extends View {
     private void refreshSeekBar(MotionEvent event) {
         refreshThumbCenterXByProgress(calculateProgress(calculateTouchX(adjustTouchX(event))));
         setSeekListener(true);
+        requestLayout();
+        refreshLoading();
         invalidate();
         Log.e("xw", "currentProgress:" + currentProgress);
 //        updateIndicator();
+    }
+
+    public void refreshLoading(){
+        ObjectAnimator rotate = ObjectAnimator.ofFloat(ivLoading, "rotation", 0f, 359f).setDuration(1000);
+        rotate.setInterpolator(new LinearInterpolator());
+        rotate.setRepeatCount(ObjectAnimator.INFINITE);
+        rotate.start();
+        requestLayout();
+
     }
 
     private float adjustTouchX(MotionEvent event) {
         float mTouchXCache;
         if (event.getX() < paddingLeft) {
             mTouchXCache = paddingLeft;
-        } else if (event.getX() > trackWidth - paddingRigtht) {
-            mTouchXCache = trackWidth - paddingRigtht;
+        } else if (event.getX() > trackWidth - paddingRigtht-paddingLeft) {
+            mTouchXCache = trackWidth - paddingRigtht-paddingLeft;
         } else {
             mTouchXCache = event.getX();
         }
@@ -346,7 +404,7 @@ public class MusicSeekBar extends View {
 
     private float calculateProgress(float touchX) {
         lastProgress = currentProgress;
-        currentProgress = (min + (getAmplitude())) * (touchX - paddingLeft) / (trackWidth * 1.0f);
+        currentProgress = (min + (getAmplitude())) * (touchX) / (trackWidth- paddingRigtht-paddingLeft * 1.0f);
         return currentProgress;
     }
 
