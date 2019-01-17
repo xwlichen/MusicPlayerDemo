@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <com.smart.musicplayer.widget.MusicSeekBar
@@ -8,6 +10,8 @@
         android:layout_width="match_parent"
         android:layout_marginTop="@dimen/dp_40"
         android:layout_marginLeft="@dimen/dp_40"
-        android:layout_height="80dp" />
+        android:layout_marginRight="@dimen/dp_40"
+        android:layout_height="wrap_content"
+        app:max="100"/>
 
 </LinearLayout>
