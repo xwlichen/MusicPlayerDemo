@@ -74,13 +74,15 @@ public class MusicSeekBar extends ViewGroup {
     float mFaultTolerance = -1;//the tolerance for user seek bar touching
     int mScale = 1;
 
-    int secondWidth;
+    float secondWidth;
 
     boolean isTouching;
     SeekChangeListener mSeekChangeListener;
 
     Context mContext;
     ImageView ivLoading;
+
+    ObjectAnimator rotate;
 
 
     public MusicSeekBar(Context context) {
@@ -251,23 +253,22 @@ public class MusicSeekBar extends ViewGroup {
     float trackLeft, trackTop, trackRight, trackBottom;
 
     public void drawFirstTrack(Canvas canvas) {
-        canvas.drawLine(trackLeft, trackTop, trackWidth, trackBottom, paintFTrack);
+        canvas.drawLine(trackLeft, trackTop, trackLeft+trackWidth, trackBottom, paintFTrack);
     }
 
     public void drawSecondTrack(Canvas canvas) {
-        canvas.drawLine(trackLeft, trackTop, secondWidth, trackBottom, paintSTrack);
+        canvas.drawLine(trackLeft, trackTop, trackLeft+secondWidth, trackBottom, paintSTrack);
     }
 
     public void drawThirdTrack(Canvas canvas) {
-        if (thumbLeft - 5 <= trackLeft) {
+        if (thumbLeft - 5 < trackLeft) {
             canvas.drawLine(trackLeft, trackTop, trackLeft, trackBottom, paintTTrack);
 
         } else {
 
             canvas.drawLine(trackLeft, trackTop, thumbLeft - 5, trackBottom, paintTTrack);
         }
-        Log.e("xw", "thumbLeft:" + thumbLeft);
-        Log.e("xw", "trackLeft:" + trackLeft);
+//
 
 
         // draw thumb
@@ -312,7 +313,7 @@ public class MusicSeekBar extends ViewGroup {
                     mSeekChangeListener.onStopTrackingTouch(this);
                 }
 //                if (!autoAdjustThumb()) {
-                refreshLoading();
+                showLoading();
                 invalidate();
 
 //                }
@@ -335,7 +336,7 @@ public class MusicSeekBar extends ViewGroup {
     private void refreshThumbCenterXByProgress(float progress) {
         //ThumbCenterX
 
-        thumbLeft = (int) ((progress / max) * ((trackWidth - thumbWidth / 2) * 1.0f));
+        thumbLeft = (int) ((progress / max) * ((trackWidth) * 1.0f));
 
     }
 
@@ -367,19 +368,33 @@ public class MusicSeekBar extends ViewGroup {
         refreshThumbCenterXByProgress(calculateProgress(calculateTouchX(adjustTouchX(event))));
         setSeekListener(true);
         requestLayout();
-        refreshLoading();
+        showLoading();
         invalidate();
         Log.e("xw", "currentProgress:" + currentProgress);
 //        updateIndicator();
     }
 
-    public void refreshLoading() {
-        ObjectAnimator rotate = ObjectAnimator.ofFloat(ivLoading, "rotation", 0f, 359f).setDuration(1000);
-        rotate.setInterpolator(new LinearInterpolator());
-        rotate.setRepeatCount(ObjectAnimator.INFINITE);
-        rotate.start();
-        requestLayout();
+    public void showLoading() {
+        if (ivLoading != null) {
+            ivLoading.setVisibility(VISIBLE);
+            if (rotate == null) {
+                rotate = ObjectAnimator.ofFloat(ivLoading, "rotation", 0f, 359f).setDuration(1000);
+                rotate.setInterpolator(new LinearInterpolator());
+                rotate.setRepeatCount(ObjectAnimator.INFINITE);
+                rotate.start();
+            }
+            requestLayout();
+        }
 
+    }
+
+    public void hideLoading() {
+        if (rotate != null) {
+            rotate.cancel();
+            if (ivLoading != null) {
+                ivLoading.setVisibility(GONE);
+            }
+        }
     }
 
     private float adjustTouchX(MotionEvent event) {
@@ -443,7 +458,42 @@ public class MusicSeekBar extends ViewGroup {
     }
 
     public void setSecondProgress(int percent) {
-        secondWidth = (int) ((trackWidth) * (percent / 100.0f));
+        secondWidth = ((trackWidth) * (percent / 100.0f));
         invalidate();
+    }
+
+
+    public float getMax() {
+        return max;
+    }
+
+    public void setMax(float max) {
+        this.max = max;
+    }
+
+    public float getMin() {
+        return min;
+    }
+
+    public void setMin(float min) {
+        this.min = min;
+    }
+
+    public float getCurrentProgress() {
+        return currentProgress;
+    }
+
+    public void setCurrentProgress(float currentProgress) {
+        this.currentProgress = currentProgress;
+        refreshThumbCenterXByProgress(currentProgress);
+        invalidate();
+    }
+
+    public ImageView getLoadingView() {
+        return ivLoading;
+    }
+
+    public void setLoadingView(ImageView ivLoading) {
+        this.ivLoading = ivLoading;
     }
 }

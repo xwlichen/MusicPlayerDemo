@@ -18,7 +18,10 @@ import android.widget.TextView;
 import com.shuyu.gsyvideoplayer.utils.CommonUtil;
 import com.shuyu.gsyvideoplayer.utils.Debuger;
 import com.smart.musicplayer.R;
+import com.smart.musicplayer.entity.SeekParams;
 import com.smart.musicplayer.listener.MusicProgressListener;
+import com.smart.musicplayer.listener.SeekChangeListener;
+import com.smart.musicplayer.widget.MusicSeekBar;
 
 import java.io.File;
 import java.util.Map;
@@ -35,7 +38,7 @@ import static com.shuyu.gsyvideoplayer.utils.CommonUtil.getTextSpeed;
  * @description :
  */
 
-public abstract class MusicControlView extends MusicView implements View.OnClickListener, View.OnTouchListener, SeekBar.OnSeekBarChangeListener {
+public abstract class MusicControlView extends MusicView implements View.OnClickListener, View.OnTouchListener, SeekChangeListener {
 
 
     //手动改变滑动的位置
@@ -43,7 +46,8 @@ public abstract class MusicControlView extends MusicView implements View.OnClick
 
     //手动滑动的起始偏移位置
     protected int mSeekEndOffset;
-
+    //触摸的是否进度条
+    protected boolean mTouchingProgressBar = false;
 
     //是否改变音量
     protected boolean mChangeVolume = false;
@@ -64,7 +68,7 @@ public abstract class MusicControlView extends MusicView implements View.OnClick
     protected boolean mSetUpLazy = false;
 
     //进度条
-    protected SeekBar sbProgress;
+    protected MusicSeekBar musicSeekBar;
     //时间显示
     protected TextView tvCurrentTime, tvTotalTime;
 
@@ -115,10 +119,9 @@ public abstract class MusicControlView extends MusicView implements View.OnClick
 
         tvCurrentTime = findViewById(R.id.tvCurrentTime);
         tvTotalTime = findViewById(R.id.tvTotalTime);
-        sbProgress = findViewById(R.id.sbProgress);
+        musicSeekBar = findViewById(R.id.musicSeekBar);
 
-        mLoadingProgressBar = findViewById(R.id.loading);
-
+        mLoadingProgressBar = musicSeekBar.getLoadingView();
 
 
         if (isInEditMode())
@@ -144,8 +147,8 @@ public abstract class MusicControlView extends MusicView implements View.OnClick
             listButton.setOnClickListener(this);
         }
 
-        if (sbProgress != null) {
-            sbProgress.setOnSeekBarChangeListener(this);
+        if (musicSeekBar != null) {
+            musicSeekBar.setOnSeekChangeListener(this);
         }
 
 
@@ -219,8 +222,8 @@ public abstract class MusicControlView extends MusicView implements View.OnClick
             case CURRENT_STATE_AUTO_COMPLETE:
                 Debuger.printfLog(MusicControlView.this.hashCode() + "------------------------------ dismiss CURRENT_STATE_AUTO_COMPLETE");
                 cancelProgressTimer();
-                if (sbProgress != null) {
-                    sbProgress.setProgress(100);
+                if (musicSeekBar != null) {
+                    musicSeekBar.setMax(100);
                 }
                 if (tvCurrentTime != null && tvTotalTime != null) {
                     tvCurrentTime.setText(tvTotalTime.getText());
@@ -267,7 +270,7 @@ public abstract class MusicControlView extends MusicView implements View.OnClick
     });
 
     /**
-     * 亮度、进度、音频
+     * 进度
      */
     @Override
     public boolean onTouch(View v, MotionEvent event) {
@@ -335,28 +338,36 @@ public abstract class MusicControlView extends MusicView implements View.OnClick
         return false;
     }
 
+
     @Override
-    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+    public void onSeeking(SeekParams seekParams) {
+
     }
 
     @Override
-    public void onStartTrackingTouch(SeekBar seekBar) {
+    public void onStartTrackingTouch(MusicSeekBar seekBar) {
+        mTouchingProgressBar = true;
+
     }
 
     /***
      * 拖动进度条
      */
     @Override
-    public void onStopTrackingTouch(SeekBar seekBar) {
+    public void onStopTrackingTouch(MusicSeekBar seekBar) {
+        mTouchingProgressBar = false;
+
         if (mMusicAllCallBack != null && isCurrentMediaListener()) {
 
-                Debuger.printfLog("onClickSeekbar");
-                mMusicAllCallBack.onClickSeekbar(mOriginUrl, mTitle, this);
+            Debuger.printfLog("onClickSeekbar");
+            mMusicAllCallBack.onClickSeekbar(mOriginUrl, mTitle, this);
         }
         if (getMusicManager() != null && mHadPlay) {
             try {
                 int time = seekBar.getProgress() * getDuration() / 100;
                 getMusicManager().seekTo(time);
+                getMusicManager().start();
+                setStateAndUi(CURRENT_STATE_PLAYING);
             } catch (Exception e) {
                 Debuger.printfWarning(e.toString());
             }
@@ -384,11 +395,11 @@ public abstract class MusicControlView extends MusicView implements View.OnClick
                         mBufferPoint = percent;
                         Debuger.printfLog("Net speed: " + getNetSpeedText() + " percent " + percent);
                     }
-                    if (sbProgress == null) {
+                    if (musicSeekBar == null) {
                         return;
                     }
                     //循环清除进度
-                    if (mLooping && mHadPlay && percent == 0 && sbProgress.getProgress() >= (sbProgress.getMax() - 1)) {
+                    if (mLooping && mHadPlay && percent == 0 && musicSeekBar.getProgress() >= (musicSeekBar.getMax() - 1)) {
                         loopSetProgressAndTime();
                     }
                 }
@@ -523,7 +534,6 @@ public abstract class MusicControlView extends MusicView implements View.OnClick
         int duration = getDuration();
         int progress = position * 100 / (duration == 0 ? 1 : duration);
         setProgressAndTime(progress, secProgress, position, duration);
-        setProgressAndTime(progress, secProgress, position, duration);
     }
 
     protected void setProgressAndTime(int progress, int secProgress, int currentTime, int totalTime) {
@@ -532,13 +542,13 @@ public abstract class MusicControlView extends MusicView implements View.OnClick
             musicProgressListener.onProgress(progress, secProgress, currentTime, totalTime);
         }
 
-        if (sbProgress == null || tvTotalTime == null || tvCurrentTime == null) {
+        if (musicSeekBar == null || tvTotalTime == null || tvCurrentTime == null) {
             return;
         }
 
-//        if (!mTouchingProgressBar) {
-//            if (progress != 0) sbProgress.setProgress(progress);
-//        }
+        if (!mTouchingProgressBar) {
+            if (progress != 0) musicSeekBar.setCurrentProgress(progress);
+        }
         if (getMusicManager().getBufferedPercentage() > 0) {
             secProgress = getMusicManager().getBufferedPercentage();
         }
@@ -548,28 +558,28 @@ public abstract class MusicControlView extends MusicView implements View.OnClick
         if (currentTime > 0)
             tvCurrentTime.setText(CommonUtil.stringForTime(currentTime));
 
-        if (sbProgress != null) {
+        if (musicSeekBar != null) {
             if (secProgress != 0 && !getMusicManager().isCacheFile()) {
-                sbProgress.setSecondaryProgress(secProgress);
+                musicSeekBar.setSecondProgress(secProgress);
             }
         }
     }
 
     protected void setSecondaryProgress(int secProgress) {
-        if (sbProgress != null ) {
+        if (musicSeekBar != null) {
             if (secProgress != 0 && !getMusicManager().isCacheFile()) {
-                sbProgress.setSecondaryProgress(secProgress);
+                musicSeekBar.setSecondProgress(secProgress);
             }
         }
 
     }
 
     protected void resetProgressAndTime() {
-        if (sbProgress == null || tvTotalTime == null || tvCurrentTime == null) {
+        if (musicSeekBar == null || tvTotalTime == null || tvCurrentTime == null) {
             return;
         }
-        sbProgress.setProgress(0);
-        sbProgress.setSecondaryProgress(0);
+        musicSeekBar.setCurrentProgress(0);
+        musicSeekBar.setSecondProgress(0);
         tvCurrentTime.setText(CommonUtil.stringForTime(0));
         tvTotalTime.setText(CommonUtil.stringForTime(0));
 
@@ -578,17 +588,14 @@ public abstract class MusicControlView extends MusicView implements View.OnClick
 
 
     protected void loopSetProgressAndTime() {
-        if (sbProgress == null || tvTotalTime == null || tvCurrentTime == null) {
+        if (musicSeekBar == null || tvTotalTime == null || tvCurrentTime == null) {
             return;
         }
-        sbProgress.setProgress(0);
-        sbProgress.setSecondaryProgress(0);
+        musicSeekBar.setCurrentProgress(0);
+        musicSeekBar.setSecondProgress(0);
         tvCurrentTime.setText(CommonUtil.stringForTime(0));
 
     }
-
-
-
 
 
     protected void setViewShowState(View view, int visibility) {
@@ -596,8 +603,6 @@ public abstract class MusicControlView extends MusicView implements View.OnClick
             view.setVisibility(visibility);
         }
     }
-
-
 
 
     protected boolean isShowNetConfirm() {
@@ -678,11 +683,6 @@ public abstract class MusicControlView extends MusicView implements View.OnClick
     }
 
 
-
-
-
-
-
     /**
      * 获取播放按键
      */
@@ -691,21 +691,9 @@ public abstract class MusicControlView extends MusicView implements View.OnClick
     }
 
 
-
-
-
-
-
-
-
-
-
-
-
     public boolean isNeedShowWifiTip() {
         return mNeedShowWifiTip;
     }
-
 
 
     /**
@@ -714,13 +702,6 @@ public abstract class MusicControlView extends MusicView implements View.OnClick
     public void setNeedShowWifiTip(boolean needShowWifiTip) {
         this.mNeedShowWifiTip = needShowWifiTip;
     }
-
-
-
-
-
-
-
 
 
     /**

@@ -2,8 +2,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="@dimen/dp_66"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal"
-    android:layout_alignParentBottom="true">
+    android:gravity="center_vertical">
     <TextView
         android:id="@+id/tvCurrentTime"
         android:layout_width="wrap_content"
@@ -15,18 +16,27 @@
         android:textColor="@color/white"
         android:textSize="@dimen/font_16" />
 
-    <SeekBar
-        android:id="@+id/sbProgress"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <!--<SeekBar-->
+        <!--android:id="@+id/sbProgress"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_weight="1"-->
+        <!--android:max="100"-->
+        <!--android:maxHeight="@dimen/dp_6"-->
+        <!--android:minHeight="@dimen/dp_6"-->
+        <!--android:layout_marginLeft="@dimen/dp_10"-->
+        <!--android:layout_marginRight="@dimen/dp_10"-->
+        <!--android:progressDrawable="@drawable/seekbar_videoplay_style"-->
+        <!--android:thumb="@mipmap/media_thumb" />-->
+
+    <com.smart.musicplayer.widget.MusicSeekBar
+        android:id="@+id/musicSeekBar"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="010dp"
+        android:layout_marginRight="010dp"
         android:layout_weight="1"
-        android:max="100"
-        android:maxHeight="@dimen/dp_6"
-        android:minHeight="@dimen/dp_6"
-        android:layout_marginLeft="@dimen/dp_10"
-        android:layout_marginRight="@dimen/dp_10"
-        android:progressDrawable="@drawable/seekbar_videoplay_style"
-        android:thumb="@mipmap/media_thumb" />
+        app:max="100"/>
 
     <TextView
         android:id="@+id/tvTotalTime"

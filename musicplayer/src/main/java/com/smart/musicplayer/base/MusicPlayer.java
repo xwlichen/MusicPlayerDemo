@@ -14,7 +14,6 @@ import android.widget.ProgressBar;
 import com.shuyu.gsyvideoplayer.utils.NetworkUtils;
 import com.smart.musicplayer.R;
 
-import moe.codeest.enviews.ENDownloadView;
 import moe.codeest.enviews.ENPlayView;
 
 /**
@@ -116,8 +115,8 @@ public class MusicPlayer extends MusicBasePlayer {
         setViewShowState(playtButton, VISIBLE);
         setViewShowState(mLoadingProgressBar, INVISIBLE);
         updateStartImage();
-        if (mLoadingProgressBar instanceof ENDownloadView) {
-            ((ENDownloadView) mLoadingProgressBar).reset();
+        if (mLoadingProgressBar instanceof ImageView) {
+            ((ImageView) mLoadingProgressBar).setVisibility(GONE);
         }
 
     }
@@ -127,11 +126,10 @@ public class MusicPlayer extends MusicBasePlayer {
         setViewShowState(mLoadingProgressBar, VISIBLE);
         setViewShowState(playtButton, INVISIBLE);
 
-        if (mLoadingProgressBar instanceof ENDownloadView) {
-            ENDownloadView enDownloadView = (ENDownloadView) mLoadingProgressBar;
-            if (enDownloadView.getCurrentState() == ENDownloadView.STATE_PRE) {
-                ((ENDownloadView) mLoadingProgressBar).start();
-            }
+        if (mLoadingProgressBar instanceof ImageView) {
+            ImageView enDownloadView = (ImageView) mLoadingProgressBar;
+                ((ImageView) mLoadingProgressBar).setVisibility(GONE);
+
         }
     }
 
@@ -141,8 +139,8 @@ public class MusicPlayer extends MusicBasePlayer {
         setViewShowState(mLoadingProgressBar, INVISIBLE);
         setViewShowState(playtButton, VISIBLE);
 
-        if (mLoadingProgressBar instanceof ENDownloadView) {
-            ((ENDownloadView) mLoadingProgressBar).reset();
+        if (mLoadingProgressBar instanceof ImageView) {
+            ((ImageView) mLoadingProgressBar).setVisibility(GONE);
         }
 
         updateStartImage();
@@ -153,8 +151,8 @@ public class MusicPlayer extends MusicBasePlayer {
     protected void changeUiToPauseShow() {
         setViewShowState(playtButton, VISIBLE);
         setViewShowState(mLoadingProgressBar, INVISIBLE);
-        if (mLoadingProgressBar instanceof ENDownloadView) {
-            ((ENDownloadView) mLoadingProgressBar).reset();
+        if (mLoadingProgressBar instanceof ImageView) {
+            ((ImageView) mLoadingProgressBar).setVisibility(GONE);
 
         }
         updateStartImage();
@@ -167,8 +165,8 @@ public class MusicPlayer extends MusicBasePlayer {
 
         setViewShowState(mLoadingProgressBar, INVISIBLE);
 
-        if (mLoadingProgressBar instanceof ENDownloadView) {
-            ((ENDownloadView) mLoadingProgressBar).reset();
+        if (mLoadingProgressBar instanceof ImageView) {
+            ((ImageView) mLoadingProgressBar).setVisibility(GONE);
         }
         updateStartImage();
 
@@ -179,8 +177,8 @@ public class MusicPlayer extends MusicBasePlayer {
         setViewShowState(playtButton, VISIBLE);
 
         setViewShowState(mLoadingProgressBar, INVISIBLE);
-        if (mLoadingProgressBar instanceof ENDownloadView) {
-            ((ENDownloadView) mLoadingProgressBar).reset();
+        if (mLoadingProgressBar instanceof ImageView) {
+            ((ImageView) mLoadingProgressBar).setVisibility(GONE);
         }
         updateStartImage();
 
@@ -190,11 +188,11 @@ public class MusicPlayer extends MusicBasePlayer {
     protected void changeUiToPlayingBufferingShow() {
         setViewShowState(playtButton, INVISIBLE);
         setViewShowState(mLoadingProgressBar, VISIBLE);
-        if (mLoadingProgressBar instanceof ENDownloadView) {
-            ENDownloadView enDownloadView = (ENDownloadView) mLoadingProgressBar;
-            if (enDownloadView.getCurrentState() == ENDownloadView.STATE_PRE) {
-                ((ENDownloadView) mLoadingProgressBar).start();
-            }
+        if (mLoadingProgressBar instanceof ImageView) {
+            ImageView enDownloadView = (ImageView) mLoadingProgressBar;
+//            if (enDownloadView.getCurrentState() == ImageView.STATE_PRE) {
+                ((ImageView) mLoadingProgressBar).setVisibility(VISIBLE);
+//            }
         }
     }
 
@@ -281,4 +279,6 @@ public class MusicPlayer extends MusicBasePlayer {
             }
         }
     }
+
+
 }
