@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
@@ -389,7 +390,10 @@ public abstract class MusicControlView extends MusicView implements View.OnClick
         post(new Runnable() {
             @Override
             public void run() {
+                Log.e("xw", "onBufferingUpdate:" + percent);
                 if (mCurrentState != CURRENT_STATE_NORMAL && mCurrentState != CURRENT_STATE_PREPAREING) {
+                    Log.e("xw", "percent:" + percent);
+
                     if (percent != 0) {
                         setTextAndProgress(percent);
                         mBufferPoint = percent;
@@ -553,26 +557,25 @@ public abstract class MusicControlView extends MusicView implements View.OnClick
             secProgress = getMusicManager().getBufferedPercentage();
         }
         if (secProgress > 94) secProgress = 100;
-        setSecondaryProgress(secProgress);
+//        setSecondaryProgress(secProgress);
         tvTotalTime.setText(CommonUtil.stringForTime(totalTime));
         if (currentTime > 0)
             tvCurrentTime.setText(CommonUtil.stringForTime(currentTime));
 
-        if (musicSeekBar != null) {
-            if (secProgress != 0 && !getMusicManager().isCacheFile()) {
-                musicSeekBar.setSecondProgress(secProgress);
-            }
+        if (secProgress > 0) {
+            Log.e("xw", "setSecondProgress:" + secProgress);
+            musicSeekBar.setSecondProgress(secProgress);
         }
     }
 
-    protected void setSecondaryProgress(int secProgress) {
-        if (musicSeekBar != null) {
-            if (secProgress != 0 && !getMusicManager().isCacheFile()) {
-                musicSeekBar.setSecondProgress(secProgress);
-            }
-        }
-
-    }
+//    protected void setSecondaryProgress(int secProgress) {
+//        if (musicSeekBar != null) {
+//            if (secProgress != 0 && !getMusicManager().isCacheFile()) {
+//                musicSeekBar.setSecondProgress(secProgress);
+//            }
+//        }
+//
+//    }
 
     protected void resetProgressAndTime() {
         if (musicSeekBar == null || tvTotalTime == null || tvCurrentTime == null) {

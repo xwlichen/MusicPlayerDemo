@@ -110,7 +110,7 @@ public class MusicSeekBar extends ViewGroup {
         trackHeight = (int) typedArray.getDimension(R.styleable.MusicSeekBar_trackSize, CommonUtil.dip2px(mContext, 2));
 
         colorFTrack = typedArray.getColor(R.styleable.MusicSeekBar_trackFColor, Color.parseColor("#E0E0E0"));
-        colorSTrack = typedArray.getColor(R.styleable.MusicSeekBar_trackSColor, Color.parseColor("#D5EAFC"));
+        colorSTrack = typedArray.getColor(R.styleable.MusicSeekBar_trackSColor, Color.parseColor("#8EADCD"));
         colorTTrack = typedArray.getColor(R.styleable.MusicSeekBar_trackTColor, Color.parseColor("#1F92E8"));
 
         thumbWidth = (int) typedArray.getDimension(R.styleable.MusicSeekBar_thumWidth, 0);
@@ -266,7 +266,7 @@ public class MusicSeekBar extends ViewGroup {
 
         } else {
 
-            canvas.drawLine(trackLeft, trackTop, thumbLeft - 5, trackBottom, paintTTrack);
+            canvas.drawLine(trackLeft, trackTop, thumbLeft - 5+1, trackBottom, paintTTrack);
         }
 //
 
@@ -457,10 +457,7 @@ public class MusicSeekBar extends ViewGroup {
         return bigDecimal.setScale(mScale, BigDecimal.ROUND_HALF_UP).floatValue();
     }
 
-    public void setSecondProgress(int percent) {
-        secondWidth = ((trackWidth) * (percent / 100.0f));
-        invalidate();
-    }
+
 
 
     public float getMax() {
@@ -495,5 +492,10 @@ public class MusicSeekBar extends ViewGroup {
 
     public void setLoadingView(ImageView ivLoading) {
         this.ivLoading = ivLoading;
+    }
+
+    public void setSecondProgress(int percent) {
+        secondWidth = ((trackWidth) * (percent / 100.0f));
+        invalidate();
     }
 }
