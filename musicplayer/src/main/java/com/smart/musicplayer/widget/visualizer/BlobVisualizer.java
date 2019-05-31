@@ -71,8 +71,8 @@ public class BlobVisualizer extends BaseVisualizer {
         blobPath = new Path();
 
         //initialize mBezierPoints, 2 extra for the smoothing first and last point
-//        mBezierPoints = new PointF[pointNum + 2];
-        mBezierPoints = new PointF[pointNum];
+        mBezierPoints = new PointF[pointNum + 2];
+//        mBezierPoints = new PointF[pointNum];
 
         for (int i = 0; i < mBezierPoints.length; i++) {
             mBezierPoints[i] = new PointF();
@@ -210,8 +210,8 @@ public class BlobVisualizer extends BaseVisualizer {
                 float percentY = distanceY / 128.0f;
 
 //                Log.e("lichen","distanceX ："+ distanceX);
-                Log.e("lichen", "percentX ：" + percentX);
-                Log.e("lichen", "percentY ：" + percentY);
+//                Log.e("lichen", "percentX ：" + percentX);
+//                Log.e("lichen", "percentY ：" + percentY);
 //                Log.e("lichen","distanceY ："+ distanceY);
 
 
@@ -233,13 +233,15 @@ public class BlobVisualizer extends BaseVisualizer {
 
             }
             //set the first and last point as first
-//            mBezierPoints[pointNum].set(mBezierPoints[0].x, mBezierPoints[0].y);
-//            mBezierPoints[pointNum + 1].set(mBezierPoints[0].x, mBezierPoints[0].y);
+            mBezierPoints[pointNum].set(mBezierPoints[0].x, mBezierPoints[0].y);
+            mBezierPoints[pointNum + 1].set(mBezierPoints[0].x, mBezierPoints[0].y);
 
             //update the control points
             mBezierSpline.updateCurveControlPoints(mBezierPoints);
             PointF[] firstCP = mBezierSpline.getFirstControlPoints();
             PointF[] secondCP = mBezierSpline.getSecondControlPoints();
+
+            Log.e("lichen", "firstCP len ：" + firstCP.length);
 
             //create the path
             blobPath.moveTo(mBezierPoints[0].x, mBezierPoints[0].y);
