@@ -4,18 +4,18 @@ import android.content.Intent;
 import android.media.audiofx.Visualizer;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 
 import com.smart.musicplayer.base.MusicPlayer;
-import com.smart.musicplayer.widget.visualizer.BlobVisualizer;
+import com.smart.musicplayer.widget.visualizer.AudioVisualConverter;
+import com.smart.musicplayer.widget.visualizer.CircleVisualizer;
 
 
 public class MainActivity extends AppCompatActivity {
 
-    BlobVisualizer blobVisualizer;
+    CircleVisualizer blobVisualizer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
         //采样的最大值
         int captureSize = Visualizer.getCaptureSizeRange()[1];
         //采样的频率
-        int captureRate = Visualizer.getMaxCaptureRate() / 2;
+        int captureRate = Visualizer.getMaxCaptureRate() / 3 * 2;
         visualizer.setCaptureSize(captureSize);
         visualizer.setDataCaptureListener(dataCaptureListener, captureRate, true, true);
         visualizer.setScalingMode(Visualizer.SCALING_MODE_NORMALIZED);
@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
         visualizer.setEnabled(true);
     }
 
-//    AudioVisualConverter visualConverter=new AudioVisualConverter();
+    AudioVisualConverter visualConverter = new AudioVisualConverter();
 
     private Visualizer.OnDataCaptureListener dataCaptureListener = new Visualizer.OnDataCaptureListener() {
         @Override
@@ -78,11 +78,13 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onFftDataCapture(Visualizer visualizer, final byte[] fft, int samplingRate) {
-            Log.e("xw", "fft:" + fft[0]);
-
-            Log.e("xw", "fft len:" + fft.length);
+//            Log.e("xw", "fft:" + fft[0]);
+//
+//            Log.e("xw", "fft len:" + fft.length);
 //            jinyunView.setmBytes(visualConverter.converter(fft));
-//            blobVisualizer.setRawAudioBytes(visualConverter.converter(fft));
+//            blobVisualizer.setRawAudioBytes(visualConverter.converterFft(fft));
+//            blobVisualizer.setRawAudioBytes(fft);
+
 
         }
     };

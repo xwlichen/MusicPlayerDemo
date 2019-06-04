@@ -95,11 +95,11 @@ public abstract class BaseVisualizer extends TextureView implements TextureView.
         paint.setColor(paintColor);
         paint.setAntiAlias(true);
         paint.setStrokeWidth(strokeWidth);
-        if (paintStyle == PaintStyle.FILL)
+//        if (paintStyle == PaintStyle.FILL)
             paint.setStyle(Paint.Style.FILL);
-        else {
-            paint.setStyle(Paint.Style.STROKE);
-        }
+//        else {
+//            paint.setStyle(Paint.Style.STROKE);
+//        }
     }
 
 

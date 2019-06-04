@@ -25,7 +25,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:visibility="gone">
 
         <Button
             android:id="@+id/tvRoate"
@@ -42,13 +43,11 @@
     </LinearLayout>
 
 
-    <com.smart.musicplayer.widget.visualizer.BlobVisualizer
+    <com.smart.musicplayer.widget.visualizer.CircleVisualizer
         android:id="@+id/blob"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         custom:color="@color/colorAccent"
-        custom:density="0.2"
-        custom:speed="meidum"
-        custom:type="fill" />
+        custom:speed="meidum" />
 
 </LinearLayout>
